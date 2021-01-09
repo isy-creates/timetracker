@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin:0;
+  padding:0;
+  box-sizing: inherit;
+  color: #495469;
+  font-family: 'Source Code Pro', monospace;
+}
+
+body {
+  background-image: linear-gradient(to bottom, #FAF9FD, #F1F0F8);
+}
+
+.timetracking {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.framed-time {
+  font-size: 90px;
+}
+
+.framed-time.has-background{
+  background-image: linear-gradient(to bottom, #495469 50%, transparent 50%, transparent 51%,  #444E62 51%);
+  border-radius: 5px;
+  color: #FAF9FD;
+  padding:0 8px;
+}
+
+.button {
+  border:none;
+  background-image:none;
+  font-size:16px;
+  background-color:#DDE0E9;
+  border-radius: 50px;
+  padding:16px 32px;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  font: 700 16px 'Source Code Pro';
+  transition: opacity .3s ease-in-out, transform .1s ease-in-out;
+}
+
+.button:focus{
+  outline:none;
+}
+
+.button:hover{
+  cursor: pointer;
+}
+
+.button.is-primary {
+  background-color: #F7AABE;
+  background-image: linear-gradient(to right, #F7AABE, #B185C2, #7868C0);
+  color: #fff;
+  position: relative;
+}
+
+.button:hover{
+  opacity: .6;
+}
+
+.button:active{
+  transform: scale(.95);
+}
+
+.button.is-primary::after{
+  content:'';
+  background-image: linear-gradient(to right, #F7AABE, #B185C2, #7868C0);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom:0px;
+  width: 80%;
+  height: 5px;
+  filter: blur(7px);
+  z-index: -1;
+}
