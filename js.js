@@ -56,18 +56,18 @@
 
   function run() {
     seconds++;
-    DOMStrings.seconds.textContent = (seconds < 10 ? "0" + seconds : seconds);
+    DOMStrings.seconds.textContent = addZero(seconds % 60);
     
     if (seconds == 60) {
       seconds = 0;
       minutes ++;
-      DOMStrings.minutes.textContent = (minutes < 10 ? "0" + minutes : minutes);
+      DOMStrings.minutes.textContent = addZero(minutes % 60);
     }
 
     if(minutes == 60) {
       minutes = 0;
       hours ++;
-      DOMStrings.hours.textContent = (hours < 10 ? "0" + hours : hours);
+      DOMStrings.hours.textContent = addZero(hours);
     }
     
   }
@@ -77,9 +77,9 @@
     seconds = 0;
     minutes = 0;
     hours = 0;
-    DOMStrings.seconds.textContent = (seconds < 10 ? "0" + seconds : seconds);
-    DOMStrings.minutes.textContent = (minutes < 10 ? "0" + minutes : minutes);
-    DOMStrings.hours.textContent = (hours < 10 ? "0" + hours : hours);
+    DOMStrings.seconds.textContent = addZero(seconds % 60);
+    DOMStrings.minutes.textContent = addZero(minutes % 60);
+    DOMStrings.hours.textContent = addZero(hours);
     localStorage.removeItem('timer-minutes');
     localStorage.removeItem('timer-seconds');
     localStorage.removeItem('timer-hours');
@@ -98,6 +98,16 @@
   function stopTimer(){
     clearInterval(timer);
     timer = false;
+  }
+
+  function addZero(val){
+    var valString = val + "";
+
+    if(valString.length < 2) {
+      return "0" + valString;
+    } else {
+      return valString;
+    }
   }
 
 
