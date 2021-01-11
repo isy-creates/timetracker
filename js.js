@@ -1,8 +1,15 @@
 ( function (){
+
+  //TODO
+  //Remove 60s and 60m out of the counter
+  //cleanup
   
-  let seconds = 0, minutes = 0, hours = 0;
+  var seconds = 0, minutes = 0, hours = 0;
   let timer;
   let paused = false;
+  let localSeconds = localStorage.getItem('timer-seconds');
+  let localMinutes = localStorage.getItem('timer-minutes');
+  let localHours = localStorage.getItem('timer-hours');
 
   const DOMStrings = {
     seconds: document.getElementById('seconds'),
@@ -13,10 +20,27 @@
     time: document.querySelectorAll('.framed-time')
   }
 
+  document.addEventListener('DOMContentLoaded', checkLocalStorage);
   DOMStrings.start.addEventListener('click', start);
   DOMStrings.stop.addEventListener('click', stop);
 
+  function checkLocalStorage(){
+
+    seconds = localSeconds;
+    minutes = localMinutes;
+    hours = localHours;
+
+    if (localSeconds) {
+      DOMStrings.seconds.textContent = (seconds < 10 ? "0" + seconds : seconds);
+      DOMStrings.minutes.textContent = (minutes < 10 ? "0" + minutes : minutes);
+      DOMStrings.hours.textContent = (hours < 10 ? "0" + hours : hours);
+    }
+  }
+
+
+
   function start() {
+
     //initialise the timer only, when the var timer is not set yet
     if(!timer) {
       //let the timer run every second
@@ -56,6 +80,9 @@
     DOMStrings.seconds.textContent = (seconds < 10 ? "0" + seconds : seconds);
     DOMStrings.minutes.textContent = (minutes < 10 ? "0" + minutes : minutes);
     DOMStrings.hours.textContent = (hours < 10 ? "0" + hours : hours);
+    localStorage.removeItem('timer-minutes');
+    localStorage.removeItem('timer-seconds');
+    localStorage.removeItem('timer-hours');
   }
 
   function pause(){
@@ -63,6 +90,9 @@
     paused = true;
     DOMStrings.start.textContent = 'Fortsetzen';
     DOMStrings.time.forEach( x => x.classList.add('paused') );
+    localStorage.setItem('timer-minutes', minutes);
+    localStorage.setItem('timer-seconds', seconds);
+    localStorage.setItem('timer-hours', hours);
   }
 
   function stopTimer(){
