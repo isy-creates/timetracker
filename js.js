@@ -2,6 +2,7 @@
   
   let seconds = 0, minutes = 0, hours = 0;
   let timer;
+  let paused = false;
 
   const DOMStrings = {
     seconds: document.getElementById('seconds'),
@@ -9,17 +10,23 @@
     hours: document.getElementById('hours'),
     start: document.getElementById('start'),
     stop: document.getElementById('stop'),
-    pause:document.getElementById('pause')
+    time: document.querySelectorAll('.framed-time')
   }
 
   DOMStrings.start.addEventListener('click', start);
   DOMStrings.stop.addEventListener('click', stop);
-  DOMStrings.pause.addEventListener('click', pause);
 
   function start() {
     //initialise the timer only, when the var timer is not set yet
     if(!timer) {
+      //let the timer run every second
       timer = setInterval(run, 1000);
+      DOMStrings.start.textContent = 'Pause';
+      if (paused) {
+        DOMStrings.time.forEach( x => x.classList.remove('paused') );
+      }
+    } else {
+      pause();
     }
   }
 
@@ -53,6 +60,9 @@
 
   function pause(){
     stopTimer();
+    paused = true;
+    DOMStrings.start.textContent = 'Fortsetzen';
+    DOMStrings.time.forEach( x => x.classList.add('paused') );
   }
 
   function stopTimer(){
