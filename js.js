@@ -1,7 +1,6 @@
 ( function (){
 
   //TODO
-  //Remove 60s and 60m out of the counter
   //cleanup
   
   var seconds = 0, minutes = 0, hours = 0;
@@ -27,13 +26,13 @@
   function checkLocalStorage(){
 
     seconds = localSeconds;
-    minutes = localMinutes;
-    hours = localHours;
+    (localMinutes ? minutes = localMinutes : 0);
+    (localHours ? hours = localHours : 0);
 
     if (localSeconds) {
-      DOMStrings.seconds.textContent = (seconds < 10 ? "0" + seconds : seconds);
-      DOMStrings.minutes.textContent = (minutes < 10 ? "0" + minutes : minutes);
-      DOMStrings.hours.textContent = (hours < 10 ? "0" + hours : hours);
+      DOMStrings.seconds.textContent = addZero(seconds % 60);
+      DOMStrings.minutes.textContent = addZero(minutes % 60);
+      DOMStrings.hours.textContent = addZero(hours);
     }
   }
 
