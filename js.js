@@ -6,6 +6,7 @@
   var seconds = 0, minutes = 0, hours = 0;
   let timer;
   let paused = false;
+
   let localSeconds = localStorage.getItem('timer-seconds');
   let localMinutes = localStorage.getItem('timer-minutes');
   let localHours = localStorage.getItem('timer-hours');
@@ -30,13 +31,12 @@
     (localHours ? hours = localHours : 0);
 
     if (localSeconds) {
+
       DOMStrings.seconds.textContent = addZero(seconds % 60);
       DOMStrings.minutes.textContent = addZero(minutes % 60);
       DOMStrings.hours.textContent = addZero(hours);
     }
   }
-
-
 
   function start() {
 
@@ -97,6 +97,7 @@
   function stopTimer(){
     clearInterval(timer);
     timer = false;
+    DOMStrings.start.textContent = 'Start';
   }
 
   function addZero(val){
