@@ -98,6 +98,9 @@
     clearInterval(timer);
     timer = false;
     DOMStrings.start.textContent = 'Start';
+    if (paused) {
+      DOMStrings.time.forEach( x => x.classList.remove('paused') );
+    }
   }
 
   function addZero(val){
