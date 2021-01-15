@@ -1,117 +1,159 @@
 ( function (){
-
-  //TODO
-  //cleanup
   
-  var seconds = 0, minutes = 0, hours = 0;
   let timer;
   let paused = false;
 
-  let localSeconds = localStorage.getItem('timer-seconds');
-  let localMinutes = localStorage.getItem('timer-minutes');
-  let localHours = localStorage.getItem('timer-hours');
+  let times = {
+    seconds: 0,
+    minutes: 0,
+    hours:   0
+  }
+
+  const local = {
+    seconds:  localStorage.getItem('seconds'),
+    minutes:  localStorage.getItem('minutes'),
+    hours:    localStorage.getItem('hours')
+  }
 
   const DOMStrings = {
-    seconds: document.getElementById('seconds'),
-    minutes: document.getElementById('minutes'),
-    hours: document.getElementById('hours'),
-    start: document.getElementById('start'),
-    stop: document.getElementById('stop'),
-    time: document.querySelectorAll('.framed-time')
+    seconds:  document.getElementById('seconds'),
+    minutes:  document.getElementById('minutes'),
+    hours:    document.getElementById('hours'),
+    start:    document.getElementById('start'),
+    stop:     document.getElementById('stop'),
+    time:     document.querySelectorAll('.framed-time')
   }
 
   document.addEventListener('DOMContentLoaded', checkLocalStorage);
   DOMStrings.start.addEventListener('click', start);
   DOMStrings.stop.addEventListener('click', stop);
 
+
   function checkLocalStorage(){
 
-    seconds = localSeconds;
-    (localMinutes ? minutes = localMinutes : 0);
-    (localHours ? hours = localHours : 0);
+    times.seconds = local.seconds;
+    (local.minutes ? times.minutes = local.minutes : 0);
+    (local.hours ? times.hours = local.hours : 0);
 
-    if (localSeconds) {
-
-      DOMStrings.seconds.textContent = addZero(seconds % 60);
-      DOMStrings.minutes.textContent = addZero(minutes % 60);
-      DOMStrings.hours.textContent = addZero(hours);
+    if (local.seconds) {
+      for (const [time, duration] of Object.entries(times)) {
+        updateDom(time, duration);
+      }
     }
   }
 
   function start() {
 
+    paused = false;
+
     //initialise the timer only, when the var timer is not set yet
     if(!timer) {
       //let the timer run every second
       timer = setInterval(run, 1000);
+
+      //Change Button 'Start'
       DOMStrings.start.textContent = 'Pause';
-      if (paused) {
-        DOMStrings.time.forEach( x => x.classList.remove('paused') );
-      }
+
+      //Remove Paused from Elements
+      checkPausedState();
+
     } else {
       pause();
     }
   }
 
   function run() {
-    seconds++;
-    DOMStrings.seconds.textContent = addZero(seconds % 60);
+    times.seconds++;
+    updateDom("seconds", times.seconds);
     
-    if (seconds == 60) {
-      seconds = 0;
-      minutes ++;
-      DOMStrings.minutes.textContent = addZero(minutes % 60);
+    if (times.seconds == 60) {
+      times.seconds = 0;
+      times.minutes ++;
+      updateDom("minutes", times.minutes);
     }
 
-    if(minutes == 60) {
-      minutes = 0;
-      hours ++;
-      DOMStrings.hours.textContent = addZero(hours);
+    if(times.minutes == 60) {
+      times.minutes = 0;
+      times.hours ++;
+      updateDom("hours", times.hours);
     }
     
   }
 
   function stop() {
+    paused = false;
+
     stopTimer();
-    seconds = 0;
-    minutes = 0;
-    hours = 0;
-    DOMStrings.seconds.textContent = addZero(seconds % 60);
-    DOMStrings.minutes.textContent = addZero(minutes % 60);
-    DOMStrings.hours.textContent = addZero(hours);
-    localStorage.removeItem('timer-minutes');
-    localStorage.removeItem('timer-seconds');
-    localStorage.removeItem('timer-hours');
+    checkPausedState();
+
+    times.seconds = 0;
+    times.minutes = 0;
+    times.hours = 0;
+
+    //Update DOM to current times
+    for (const [time, duration] of Object.entries(times)) {
+      updateDom(time, duration);
+    }
+
+    //Clear LocalStorage of own entries
+    for (const time of Object.keys(times)) {
+      removeItemInLocalStorage(time);
+    }
   }
 
   function pause(){
-    stopTimer();
     paused = true;
-    DOMStrings.start.textContent = 'Fortsetzen';
-    DOMStrings.time.forEach( x => x.classList.add('paused') );
-    localStorage.setItem('timer-minutes', minutes);
-    localStorage.setItem('timer-seconds', seconds);
-    localStorage.setItem('timer-hours', hours);
+
+    stopTimer();
+    updateButtonText('Fortsetzen');
+    checkPausedState();
+
+    //Update entries in Local Storage
+    for (const [time, duration] of Object.entries(times)) {
+      setitemInLocalStorage(time, duration);
+    }
+  }
+
+
+  function setitemInLocalStorage(time, duration){
+    localStorage.setItem(time, duration)
+  }
+
+  function checkPausedState(){
+    if (paused) {
+      DOMStrings.time.forEach( item => item.classList.add('paused') );
+    } else {
+      DOMStrings.time.forEach( item => item.classList.remove('paused') );
+    }
+  }
+
+  function removeItemInLocalStorage(time) {
+    localStorage.removeItem(time);
   }
 
   function stopTimer(){
     clearInterval(timer);
     timer = false;
-    DOMStrings.start.textContent = 'Start';
-    if (paused) {
-      DOMStrings.time.forEach( x => x.classList.remove('paused') );
-    }
   }
 
-  function addZero(val){
-    var valString = val + "";
+  function updateButtonText(text){
+    DOMStrings.start.textContent = text;
+  }
 
-    if(valString.length < 2) {
-      return "0" + valString;
+  function addZero(number){
+    //convert to string in order to check length
+    let numString = number + "";
+
+    if(numString.length < 2) {
+      return "0" + number;
     } else {
-      return valString;
+      return number;
     }
   }
 
+    //Update DOM to current times
+    function updateDom(time, duration) {
+      DOMStrings[time].textContent = addZero(duration === "hour" ? duration : duration % 60);
+    }
 
 })();
