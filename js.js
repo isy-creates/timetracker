@@ -114,7 +114,6 @@
     }
   }
 
-
   function setitemInLocalStorage(time, duration){
     localStorage.setItem(time, duration)
   }
