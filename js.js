@@ -132,6 +132,7 @@
 
   function stopTimer(){
     clearInterval(timer);
+    updateButtonText('Start');
     timer = false;
   }
 
